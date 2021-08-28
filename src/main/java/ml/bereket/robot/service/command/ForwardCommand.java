@@ -1,11 +1,18 @@
 package ml.bereket.robot.service.command;
 
+
+import ml.bereket.robot.dto.Location;
+
 public class ForwardCommand extends Command {
 
     private int steps = 0;
+    private final int gridColumns;
+    private final int gridRows;
 
-    public ForwardCommand(int steps) {
+    public ForwardCommand(Integer steps, Integer gridColumns, Integer gridRows) {
         this.steps = steps;
+        this.gridColumns = gridColumns;
+        this.gridRows = gridRows;
     }
 
     /*
@@ -18,27 +25,26 @@ public class ForwardCommand extends Command {
     @Override
     public Location getNewLocation(Location currentLocation) {
 
-        int x = currentLocation.x;
-        int y = currentLocation.y;
+        int x = currentLocation.getCoordinate().getX();
+        int y = currentLocation.getCoordinate().getY();
 
-        switch(currentLocation.direction){
+        switch(currentLocation.getDirection()){
             case EAST:
-                x+=steps;
+                if(x < (gridColumns - 1)) x += steps;
                 break;
             case WEST:
-                x-=steps;
+                if(x > 0)  x -= steps;
                 break;
             case SOUTH:
-                y+=steps;
+                if(y < (gridRows - 1)) y += steps;
                 break;
             case NORTH:
-                y-=steps;
+                if(y > 0) y -= steps;
                 break;
             default:
         }
-        currentLocation.x = x;
-        currentLocation.y = y;
-
+        currentLocation.getCoordinate().setX(x);
+        currentLocation.getCoordinate().setY(y);
         return currentLocation;
     }
 

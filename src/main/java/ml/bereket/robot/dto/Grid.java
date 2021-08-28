@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Coordinate {
-    Integer x;
-    Integer y;
+public class Grid {
+    Integer columns;
+    Integer rows;
 }

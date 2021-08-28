@@ -1,5 +1,7 @@
 package ml.bereket.robot.service.command;
 
+import ml.bereket.robot.dto.Location;
+
 public class PositionCommand extends Command {
 
     private Location location;
