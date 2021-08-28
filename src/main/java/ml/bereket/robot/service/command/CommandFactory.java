@@ -12,26 +12,26 @@ public class CommandFactory {
 
         switch(commandDto.getType()){
             case EAST:
-                return new East();
+                return new EastCommand();
             case WEST:
-                return new West();
+                return new WestCommand();
             case NORTH:
-                return new North();
+                return new NorthCommand();
             case SOUTH:
-                return new South();
+                return new SouthCommand();
             case POSITION:
-                return new Position(commandDto.getLocation());
+                return new PositionCommand(commandDto.getLocation());
             case FORWARD:
                 Integer steps = commandDto.getSteps();
-                return new Forward(steps);
+                return new ForwardCommand(steps);
             case WAIT:
-                return new Wait();
+                return new WaitCommand();
             case TURNAROUND:
-                return new TurnAround();
+                return new TurnAroundCommand();
             case RIGHT:
-                return new Right();
+                return new RightCommand();
             case LEFT:
-                return new Left();
+                return new LeftCommand();
             default: throw new IllegalArgumentException("Cannot determine command");
         }
     }

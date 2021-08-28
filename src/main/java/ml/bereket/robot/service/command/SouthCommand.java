@@ -2,12 +2,12 @@ package ml.bereket.robot.service.command;
 
 import ml.bereket.robot.service.Direction;
 
-public class East extends Command {
+public class SouthCommand extends Command {
 
     @Override
     public Location getNewLocation(Location currentLocation) {
         //only change the direction; keep the current coordinates
-        currentLocation.direction = Direction.EAST;
+        currentLocation.direction = Direction.SOUTH;
         return currentLocation;
     }
 }

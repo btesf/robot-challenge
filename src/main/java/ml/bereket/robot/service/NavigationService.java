@@ -9,5 +9,5 @@ import java.util.List;
 public interface NavigationService {
 
     List<Command> prepareCommands(List<CommandDto> commandDtos);
-    Location moveRobot(List<Command> commands, Location initialLocation);
+    Location moveRobot(Location initialLocation, List<Command> commands);
 }

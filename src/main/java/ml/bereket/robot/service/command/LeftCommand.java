@@ -1,6 +1,6 @@
 package ml.bereket.robot.service.command;
 
-public class Left extends Command {
+public class LeftCommand extends Command {
 
     @Override
     public Location getNewLocation(Location currentLocation) {
