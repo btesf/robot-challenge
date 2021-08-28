@@ -4,6 +4,7 @@ public class Wait extends Command {
 
     @Override
     public Location getNewLocation(Location currentLocation) {
-        return null;
+        //Do nothing.
+        return currentLocation;
     }
 }

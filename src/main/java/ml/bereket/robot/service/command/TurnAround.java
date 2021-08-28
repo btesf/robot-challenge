@@ -4,6 +4,8 @@ public class TurnAround extends Command {
 
     @Override
     public Location getNewLocation(Location currentLocation) {
-        return null;
+        //change the direction to the opposite side relative to current position; Don't change coordinate
+        currentLocation.direction = currentLocation.direction.getOpposite();
+        return currentLocation;
     }
 }

@@ -10,6 +10,7 @@ public class Position extends Command {
 
     @Override
     public Location getNewLocation(Location currentLocation) {
-        return null;
+        //returns new location already passed as part of the command; Current location is unimportant
+        return location;
     }
 }
