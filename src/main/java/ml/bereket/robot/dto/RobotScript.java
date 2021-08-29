@@ -10,8 +10,8 @@ import lombok.Data;
 public class RobotScript {
     @JsonProperty("grid")
     Grid grid;
-    @JsonProperty("initial_coordinate")
-    Coordinate initialCoordinate;
+    @JsonProperty("initial_location")
+    Location initialLocation;
     @JsonProperty("commands")
     String commands;
 }

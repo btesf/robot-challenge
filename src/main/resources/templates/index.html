@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+        table#robot-grid td {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            vertical-align: middle;
+            font-weight: bolder;
+            font-size: larger;
+            border-color: black;
+        }
+    </style>
+</head>
+<body>
+<div id="app" class="container">
+    <div class="row">
+        <div style="height: 50px;"></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 text-center">
+            <table id="robot-grid" class="table table-bordered">
+                <tbody>
+                <tr v-for="(row, y)  in grid.rows" :key="y">
+                    <td v-for="(col, x) in grid.cols" :key="x">
+                        {{gridData[y][x]}}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-1"></div>
+        <div class="col-sm-5">
+            <form v-on:submit.prevent>
+                <div class="form-group">
+                    <label for="robot-script">Robot Script</label>
+                    <textarea  v-model="commands" class="form-control" id="robot-script" placeholder="Robot script" cols="60" rows="10"></textarea>
+                </div>
+                <button type="button" @click="sendRobotScript" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            grid: {
+                rows: 5,
+                cols: 5
+            },
+            currentPosition: {
+                x: 0, //initial
+                y: 0  //initial
+            },
+            currentDirection: 'EAST', //initial direction
+            gridData: [],
+            commands: ''
+        },
+        methods: {
+            sendRobotScript: function () {
+                var initialLocation = {'coordinate' : this.currentPosition, 'direction' : this.currentDirection}
+                var robotScript = {};
+                robotScript.initial_location = initialLocation;
+                robotScript.commands=this.commands;
+                robotScript.grid = this.grid;
+                console.log(JSON.stringify(robotScript))
+                const requestOptions = {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(robotScript)
+                };
+                fetch("http://localhost:[[${@environment.getProperty('server.port')}]]/move", requestOptions)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(JSON.stringify(data))
+                        var coordinate = data.coordinate
+                        if(coordinate){
+                            //remove the previous arrow from the old coordinate
+                            this.putValueAtCoordinate(this.currentPosition.x, this.currentPosition.y, null)
+                            var symbol = this.getSymbolForDirection(data.direction)
+                            this.putValueAtCoordinate(coordinate.x, coordinate.y, symbol)
+                            this.updateCurrentPosition(coordinate); //save new coordinate
+                            this.currentDirection = data.direction //save new direction
+                            //clear form
+                            this.commands = ""
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                        alert(error);
+                    });
+            },
+            putValueAtCoordinate: function(x, y, value){
+                var row = this.gridData[y];
+                row.splice(x, 1, value) //assigning by index as row[y] = <val> is not reactive
+            },
+            updateCurrentPosition: function(coordinate){
+                this.currentPosition.x = coordinate.x;
+                this.currentPosition.y = coordinate.y;
+            },
+            getSymbolForDirection: function(direction){
+                switch(direction){
+                    case "NORTH": return "↑";
+                    case "SOUTH": return "↓";
+                    case "EAST": return "→";
+                    case "WEST": return "←";
+                    default: return "?"
+                }
+            }
+        },
+        created: function () {
+            for (var i = 0; i < this.grid.rows; i++) {
+                var row = Array(this.grid.cols);
+                for (var j = 0; j < this.grid.cols; j++) {
+                    //assigning by index as row[j] is not reactive
+                    row.splice(j, 1, null)
+                }
+                this.gridData.push(row);
+            }
+            //put Robot at initial position
+            var symbol = this.getSymbolForDirection(this.currentDirection)
+            this.putValueAtCoordinate(this.currentPosition.x, this.currentPosition.y, symbol)
+        }
+    })
+</script>
+</body>
+</html>

@@ -10,6 +10,7 @@ import ml.bereket.robot.service.command.Command;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -25,12 +26,12 @@ public class RobotController {
     private final NavigationService navigationService;
     private final CommandParserService commandParserService;
 
+    @RequestMapping("/move")
     @PostMapping(produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Location> createSubject(@RequestBody RobotScript robotScript) {
 
         List<Command> commands = commandParserService.parseCommands(robotScript.getCommands(), robotScript.getGrid());
-        Location startingPoint = new Location();
-        startingPoint.setCoordinate(robotScript.getInitialCoordinate());
+        Location startingPoint = robotScript.getInitialLocation();
         Location destination = navigationService.moveRobot(startingPoint, commands);
         return ResponseEntity.status(OK).body(
                destination

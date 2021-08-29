@@ -64,7 +64,7 @@ public class CommandParserServiceImpl implements CommandParserService {
             return parseSouthCommand(parts);
         }
 
-        throw new RuntimeException("Cannot determine command");
+        throw new RuntimeException("Cannot determine command: " + parts[0]);
     }
 
     private Command parsePositionCommand(String[] parts) {
@@ -134,7 +134,7 @@ public class CommandParserServiceImpl implements CommandParserService {
     }
 
     private Command parseSouthCommand(String[] parts) {
-        return new WestCommand();
+        return new SouthCommand();
     }
 
     private Command parseNorthCommand(String[] parts) {
@@ -148,6 +148,7 @@ public class CommandParserServiceImpl implements CommandParserService {
         if(!StringUtils.hasText(script) || !StringUtils.hasText(script.trim())){
             return new ArrayList<>();
         }
+        //script can be separated by either \n or \r\n
         String[] lines = script.split("(\n|\r\n)");
         List<Command> commands = new ArrayList<>();
         for(int i = 0; i < lines.length; i++){

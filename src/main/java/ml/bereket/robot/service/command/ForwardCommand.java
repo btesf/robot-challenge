@@ -30,16 +30,20 @@ public class ForwardCommand extends Command {
 
         switch(currentLocation.getDirection()){
             case EAST:
-                if(x < (gridColumns - 1)) x += steps;
+                if((x + steps) <= (gridColumns - 1)) x += steps;
+                else x = gridColumns - 1;
                 break;
             case WEST:
-                if(x > 0)  x -= steps;
+                if((x - steps) >= 0) x -= steps;
+                else x = 0;
                 break;
             case SOUTH:
-                if(y < (gridRows - 1)) y += steps;
+                if((y + steps) <= (gridRows - 1)) y += steps;
+                else y = gridRows - 1;
                 break;
             case NORTH:
-                if(y > 0) y -= steps;
+                if((y - steps) >= 0) y -= steps;
+                else y = 0;
                 break;
             default:
         }
